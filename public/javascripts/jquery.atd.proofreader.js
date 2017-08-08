@@ -239,6 +239,7 @@ function AtD_Proofreader(container,socket) {
 		widget.getWidget().click(function(event) {
 			AtD.checkComponent(component);
 		});
+
                 widget.getWidget().click();
                 component.addEventListener("",function(){AtD.checkComponent(this)},false);
  		widget.adjustWidget();

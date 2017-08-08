@@ -29,6 +29,7 @@ function AtD_Basic() {
 	var parent = this;
         var socket;
 	this.clickListener = function(event) {
+                /*alert("in clickListener");*/
 		if (parent.core.isMarkedNode(event.target))
 			parent.suggest(event.target);
 	};
@@ -182,6 +183,23 @@ function AtD_Basic() {
               /*parent.inputCount=0;*/
             }
         };
+        /*
+        this.DOMNodeInsertedListener=function(e){
+              var allText3=parent.getCurrentCheck();
+              alert("DOMNodeInserted :"+allText3);
+              parent.socket.emit('message',{
+                     text: allText3
+              });
+
+        };
+
+        this.DOMSubtreeModifiedListener=function(e){
+              var allText3=parent.getCurrentCheck();
+              alert("DOMSubtreeModified:"+allText3);
+              parent.socket.emit('message',{
+                     text: allText3
+              });
+        };*/
 
 	this.ignoreSuggestion = function(e) {
 		parent.core.removeParent(parent.errorElement);
@@ -385,21 +403,30 @@ AtD_Basic.prototype.remove = function(container) {
 
 AtD_Basic.prototype.processXML = function(container, responseXML) {
         this.mycontainer=container;
-        var allTextM=this.getCurrentCheck(); 
+        var allTextM=this.getCurrentCheck();
+        
+        container.unbind('click', this.clickListener);
+        /*alert("before click click");*/
+        container.click(this.clickListener);
+        container.bind('textInput',this.textInputListener);
+        container.bind('keyup',this.keyupListener);
+        container.bind('copy',this.copyListener);
+        /*container.bind('DOMNodeInserted',this.DOMNodeInsertedListener);
+        container.bind('DOMSubtreeModified',this.DOMSubtreeModifiedListener);*/
+        /*no add mouseleave*/
+        container.bind('mouseleave',this.mouseleaveListener);
+        container.bind('mouseout',this.mouseoutListener);
+
+        /*alert("in processXML:"+allTextM);*/
         /*parent.lastAllText=allTextM;*/ 
 	var results = this.core.processXML(responseXML,allTextM);
+        /*alert("jquery.atd results.count:"+results.count);*/
 	if (results.count > 0)
 		results.count = this.core.markMyWords(container.contents(), results.errors);
 
         this.mycontainer=container;
-        container.unbind('click', this.clickListener);
-	container.click(this.clickListener);
-        container.bind('textInput',this.textInputListener); 
-        container.bind('keyup',this.keyupListener);
-        container.bind('copy',this.copyListener);
-        /*container.bind('mouseleave',this.mouseleaveListener);*/        
-        container.bind('mouseout',this.mouseoutListener);
-	return results.count;
+	
+        return results.count;
 };
 
 AtD_Basic.prototype.editSelection = function() {

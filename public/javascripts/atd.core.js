@@ -327,7 +327,6 @@ AtDCore.prototype.processXML = function(responseXML,currentText) {
 	} // end for loop
 
         $('#error-list').empty();
-
         var originWord="";
         var tempSuggestions;
         var suggestWord="";
@@ -343,7 +342,6 @@ AtDCore.prototype.processXML = function(responseXML,currentText) {
 
 	var errorStruct;
         var ecount = spellingErrors.length + grammarErrors.length + enrichment.length;
-
 	if (ecount > 0)
 		errorStruct = this.buildErrorStructure(spellingErrors, enrichment, grammarErrors);
 	else
@@ -459,7 +457,6 @@ AtDCore.prototype.markMyWords = function(container_nodes, errors) {
              allText+=container_nodes[j].nodeValue;
        }
  
-        /*alert("container_nodes.length:"+container_nodes.length+" allText:"+allText);*/
 	this._walk(container_nodes,allText, function(n) {
                 /*alert("ntype:"+n.nodeType+" nval:"+n.nodeValue+" nhtml:"+n.innerHTML);*/
 		/*if (n.nodeType == 3 && !parent.isMarkedNode(n))*/
@@ -587,11 +584,10 @@ AtDCore.prototype.markMyWords = function(container_nodes, errors) {
 			}
 		}
 	});
-
- 
-        this._walk(container_nodes,allText, function(n) {
-                n.change(function(){alert("test show  click b");});
-         });       
+       
+         this._walk(container_nodes,allText, function(n) {
+                n.change(function(){});
+         });      
 	return ecount;
 };
 

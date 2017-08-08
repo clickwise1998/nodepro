@@ -2,7 +2,7 @@
 /*connect the server and the socket become that of the user*/
 var socket = io.connect();
 $(document).ready(function() {
-var chatApp = new Chat(socket);
+   /*var chatApp = new Chat(socket);*/
 
    socket.on('message', function (message) {
         /*alert('cli rec:'+message.text);*/
