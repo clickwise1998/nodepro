@@ -170,12 +170,14 @@ AtDCore.prototype.addToCurrErrorList=function(suggestion,currentText){
         var errorContKey="";
         var errorString=suggestion["string"];
         var errorContext=suggestion["context"];
-        errorContKey=errorContext+" "+errorString;
+        var errorSufContext=suggestion["sufcontext"];
+
+        errorContKey=errorContext+" "+errorString+" "+errorSufContext;
         
         var exist=false;
         var itemContKey="";
         for(var i=0;i<this.currentErrorList.length;i++){
-            itemContKey=this.currentErrorList[i]["context"]+" "+this.currentErrorList[i]["string"];
+            itemContKey=this.currentErrorList[i]["context"]+" "+this.currentErrorList[i]["string"]+" "+this.currentErrorList[i]["sufcontext"];
             if(itemContKey==errorContKey)
             {
                 exist=true;
@@ -263,7 +265,21 @@ AtDCore.prototype.processXML = function(responseXML,currentText) {
 			else
 				errorContext = "";
 
-                        errorContKey=errorContext+" "+errorString;
+                        var errorSufContext;
+                                               
+                        if (errors[i].getElementsByTagName('precontext').item(0).firstChild != null)
+                                errorSufContext = errors[i].getElementsByTagName('sufcontext').item(0).firstChild.data;
+                        else
+                                errorSufContext = "";
+
+                        var errorDetail;
+                                               
+                        if (errors[i].getElementsByTagName('detail').item(0).firstChild != null)
+                                errorDetail = errors[i].getElementsByTagName('detail').item(0).firstChild.data;
+                        else
+                                errorDetail = "";
+
+                        errorContKey=errorContext+" "+errorString+" "+errorSufContext;
 
 			/* create a hashtable with information about the error in the editor object, we will use this later
 			   to populate a popup menu with information and suggestions about the error */
@@ -277,6 +293,8 @@ AtDCore.prototype.processXML = function(responseXML,currentText) {
 				suggestion["matcher"]     = new RegExp('^' + errorString.replace(/\s+/, this._getSeparators()) + '$');
 
 				suggestion["context"]     = errorContext;
+                                suggestion["sufcontext"]     = errorSufContext;
+                                suggestion["detail"]     = errorDetail;
 				suggestion["string"]      = errorString;
 				suggestion["type"]        = errorType;
                                 suggestion["orderIndex"] = currentText.indexOf(errorContKey);                                
@@ -330,14 +348,18 @@ AtDCore.prototype.processXML = function(responseXML,currentText) {
         var originWord="";
         var tempSuggestions;
         var suggestWord="";
+        var suggetDetail="";
         for(var i=0;i<this.currentErrorList.length;i++){
               originWord=this.currentErrorList[i]["string"];
-              tempSuggestions=this.currentErrorList[i]["suggestions"];
+              suggetDetail=this.currentErrorList[i]["detail"];
+              /*tempSuggestions=this.currentErrorList[i]["suggestions"];
               if(tempSuggestions!=undefined&&tempSuggestions.length>0)
               {
                  suggestWord=tempSuggestions[0];
                  $('#error-list').append("<font color=\"red\">"+originWord+"</font>-><font color=\"#00CC33\">"+suggestWord+"</font><br/>");
-              }
+              }*/
+
+              $('#error-list').append("<font color=\"red\">"+originWord+"</font>-><font color=\"#00CC33\">"+suggetDetail+"</font><br/>");
         }
 
 	var errorStruct;
