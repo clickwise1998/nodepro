@@ -182,7 +182,12 @@ AtDCore.prototype.addToCurrErrorList=function(suggestion,currentText){
             {
                 exist=true;
             }
+            /*alert("i="+i+" itemContKey:"+itemContKey+" index:"+currentText.indexOf(itemContKey));*/
             this.currentErrorList[i]["orderIndex"]=currentText.indexOf(itemContKey);
+            if(this.currentErrorList[i]["orderIndex"]==-1){
+               this.currentErrorList[i]["orderIndex"]=currentText.indexOf(this.currentErrorList[i]["context"]+" "+this.currentErrorList[i]["string"]+""+this.currentErrorList[i]["sufcontext"]);
+            }
+
         } 
        
         if(exist==false){
@@ -297,7 +302,11 @@ AtDCore.prototype.processXML = function(responseXML,currentText) {
                                 suggestion["detail"]     = errorDetail;
 				suggestion["string"]      = errorString;
 				suggestion["type"]        = errorType;
-                                suggestion["orderIndex"] = currentText.indexOf(errorContKey);                                
+                                suggestion["orderIndex"] = currentText.indexOf(errorContKey);
+                                if(suggestion["orderIndex"]==-1){
+                                    suggestion["orderIndex"]=currentText.indexOf(errorContext+" "+errorString+""+errorSufContext);
+                                }
+                                
                                 /*alert("errorContKey:"+errorContKey+" orderIndex:"+suggestion["orderIndex"]+" currentText:"+currentText);*/
                                 this.addToCurrErrorList(suggestion,currentText);
 				this.suggestions.push(suggestion);
